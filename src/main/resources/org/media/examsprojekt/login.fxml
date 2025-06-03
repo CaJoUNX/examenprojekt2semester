@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.Pane?>
+<Pane xmlns:fx="http://javafx.com/fxml"
+      fx:controller="UI.Login.LoginController"
+      fx:id="login_root"
+      style="-fx-background-color: linear-gradient(to bottom, black, white)"
+>
+
+
+
+</Pane>
