@@ -38,7 +38,7 @@ public class DatabaseConnection {
         try{
 
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            DriverManager.getConnection("jdbc:sqlserver://"+ ipaddress + ":"+port+";databaseName="+databaseName,userName,password);
+            con = DriverManager.getConnection("jdbc:sqlserver://"+ ipaddress + ":"+port+";databaseName="+databaseName,userName,password);
         }
         catch(SQLException e){
             System.out.println(e.getStackTrace() + " : " + e.getMessage());

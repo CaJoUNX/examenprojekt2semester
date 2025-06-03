@@ -18,4 +18,6 @@ module org.media.examsprojekt {
     exports org.media.examsprojekt;
     exports UI.Login;
     opens UI.Login to javafx.fxml;
+    opens UI.User to javafx.fxml;
+    opens UI.HR to javafx.graphics;
 }

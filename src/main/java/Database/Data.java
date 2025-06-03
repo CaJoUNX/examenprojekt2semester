@@ -1,12 +1,17 @@
 package Database;
 
+import org.media.examsprojekt.Var;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Data {
-    private DatabaseConnection dbc = new DatabaseConnection("49.13.17.29", "1443", "examen", "examen", "3X4M3N5-PR0J3KT");
-
+    private DatabaseConnection dbc;
+    public Data() throws SQLException, ClassNotFoundException {
+        dbc = new DatabaseConnection(Var.Database.IPADDRESS, String.valueOf(Var.Database.PORT), Var.Database.DATABASE, Var.Database.USERNAME, Var.Database.PASSWORD);
+        dbc.open();
+    }
     public int create(String table, String[] colums, String[] data ) throws SQLException {
         try {
             String prepColums = "";
