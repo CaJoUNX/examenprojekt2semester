@@ -6,6 +6,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="UI.User.UserController"
+
             prefWidth="1920" prefHeight="1080">
 
     <!-- Side panel on the left -->
@@ -54,7 +55,7 @@
                     <PasswordField fx:id="confirmPasswordField" GridPane.rowIndex="7" GridPane.columnIndex="1" prefWidth="300" />
                 </GridPane>
 
-                <Button fx:id="updateButton" text="Update" maxWidth="100" />
+                <Button fx:id="updateButton" text="Update" maxWidth="100" onMouseClicked="#updateUserInfo" />
             </VBox>
 
             <!-- Right panel: Requests -->
@@ -64,7 +65,8 @@
 
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <ChoiceBox fx:id="selectLocation" prefWidth="200" />
-                    <Button fx:id="submitRequest" text="Submit" />
+                    <Button fx:id="submitRequest" text="Submit" onMouseClicked="#sendRequest" />
+                    <Button fx:id="deleteRequest" text="-" onMouseClicked="#deleteRequest" />
                 </HBox>
             </VBox>
 

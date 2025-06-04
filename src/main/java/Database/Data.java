@@ -17,12 +17,19 @@ public class Data {
             String prepColums = "";
             String prepData = "";
             for (int i = 0; i < colums.length; i++) {
-                prepColums += colums[i] + ",";
+                prepColums += colums[i];
+                if (i < colums.length - 1) {
+                    prepColums += ",";
+                }
             }
             for (int i = 0; i < data.length; i++) {
-                prepData += data[i] + ",";
+                prepData += data[i];
+                if (i < data.length - 1) {
+                    prepData += ",";
+                }
             }
-            dbc.executeQuery("INSERT INTO " + table + "(" + prepColums + ") VALUES (" + prepData + ")");
+            System.out.println("INSERT INTO " + table + " (" + prepColums + ") VALUES (" + prepData + ")");
+            dbc.executeQuery("INSERT INTO " + table + " (" + prepColums + ") VALUES (" + prepData + ")");
             return 1;
         }
         catch (SQLException e) {
@@ -33,7 +40,7 @@ public class Data {
     }
     public ResultSet read(String data, String table, String conditions) throws SQLException {
         try {
-            ResultSet rs = dbc.executeQuery("SELECT " + data +  " FROM " + table + " WHERE" +conditions);
+            ResultSet rs = dbc.executeQuery("SELECT " + data +  " FROM " + table + " " +conditions);
             return rs;
         }
         catch (SQLException e) {
@@ -59,7 +66,7 @@ public class Data {
     }
     public int delete(String table, String condition) throws SQLException {
         try {
-            dbc.executeQuery("DELETE FROM " + table + " WHERE " + condition);
+            dbc.executeQuery("DELETE FROM " + table + " " + condition);
             return 1;
         }
         catch (SQLException e) {
@@ -69,8 +76,8 @@ public class Data {
 
     }
     public int count (String table, String condition) throws SQLException {
-        dbc.executeQuery("SELECT COUNT(*) FROM " + table + " WHERE " + condition);
-        ResultSet rs = dbc.executeQuery("SELECT COUNT(*) FROM " + table);
+
+        ResultSet rs = dbc.executeQuery("SELECT COUNT(*) FROM " + table + " " + condition);
         rs.next();
         return rs.getInt(1);
     }

@@ -1,6 +1,8 @@
 package UI.Login;
 
 import Database.DatabaseConnection;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -11,18 +13,23 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.util.Duration;
 import org.media.examsprojekt.Main;
 import org.media.examsprojekt.Var;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 
 
 public class LoginController {
-
+    Pane loginContainer = new Pane();
     private int departmentID;
     @FXML
     Pane login_root;
+
 
 
     public void initialize() throws SQLException, ClassNotFoundException {
@@ -36,15 +43,15 @@ public class LoginController {
     }
 
     public void initializeLoginScreen() {
-        Pane loginContainer = new Pane();
+
         Pane Background = new Pane();
         double containerSize = 0.45;
-        loginContainer.setPrefSize(Var.WINDOW_WIDTH  * containerSize, Var.WINDOW_HEIGHT * containerSize);
-        Background.setPrefSize(Var.WINDOW_WIDTH * containerSize, Var.WINDOW_HEIGHT * containerSize);
+        loginContainer.setPrefSize(Var.Window.WIDTH * containerSize, Var.Window.HEIGHT * containerSize);
+        Background.setPrefSize(Var.Window.WIDTH * containerSize, Var.Window.HEIGHT * containerSize);
         Background.setStyle("-fx-background-color: #ffffff;");
         Background.setOpacity(0.4);
-        loginContainer.setLayoutX(Var.WINDOW_WIDTH / 2 - loginContainer.getPrefWidth() / 2);
-        loginContainer.setLayoutY(Var.WINDOW_HEIGHT / 2 - loginContainer.getPrefHeight() / 2);
+        loginContainer.setLayoutX(Var.Window.WIDTH / 2 - loginContainer.getPrefWidth() / 2);
+        loginContainer.setLayoutY(Var.Window.HEIGHT / 2 - loginContainer.getPrefHeight() / 2);
         loginContainer.getChildren().addAll(Background);
         VBox inputContainer = new VBox();
         inputContainer.setPrefSize(loginContainer.getPrefWidth(), loginContainer.getPrefHeight());
@@ -80,17 +87,18 @@ public class LoginController {
 
     private void processLogin(String username, String password) throws SQLException, ClassNotFoundException, IOException {
         FXMLLoader loader;
-        if (checkCredentials(username, password)) {
+        if (checkCredentials(username, password) ) {
+
             if (departmentID == 1) {
                 loader = new FXMLLoader(Main.class.getResource("HR.fxml"));
-                Scene scene = new Scene(loader.load(), Var.WINDOW_WIDTH, Var.WINDOW_HEIGHT);
+                Scene scene = new Scene(loader.load(), Var.Window.WIDTH, Var.Window.HEIGHT);
                 Main.primaryStage.setScene(scene);
                 Main.primaryStage.show();
 
             }
             else {
                 loader = new FXMLLoader(Main.class.getResource("User.fxml"));
-                Scene scene = new Scene(loader.load(), Var.WINDOW_WIDTH, Var.WINDOW_HEIGHT);
+                Scene scene = new Scene(loader.load(), Var.Window.WIDTH, Var.Window.HEIGHT);
                 Main.primaryStage.setScene(scene);
                 Main.primaryStage.show();
 
@@ -100,28 +108,47 @@ public class LoginController {
         }
         else {
             Label wrongCredentials = new Label("Sorry but your Username or Password is incorrect");
+            wrongCredentials.setFont(new Font("Arial", 20));
+            wrongCredentials.setStyle("-fx-text-fill: red");
+            loginContainer.getChildren().add(wrongCredentials);
 
         }
 
     }
     private boolean checkCredentials(String username, String password) throws SQLException, ClassNotFoundException {
 
-//        Data d = new Data();
-//
-//        if (d.count("tblEmployee", "fldUsername = " + username) == 1) {
-//            ResultSet result = d.read("password", "", "username =" + username );
-//            result.next();
-//            if (result.getString("password").equals(password)) {
-//                //returns true when the Credentials match the Database
-//
-//                return true;
-//            }
-//
-//        }
-//        return false;
-        departmentID = 0;
-        return true;
+        Database.Data d = new Database.Data();
+
+        if (d.count("tblEmployee", " WHERE fldUsername = '" + username + "'") == 1) {
+            ResultSet result = d.read("fldPassword", "tblEmployee", " WHERE fldUsername ='" + username + "'");
+            result.next();
+
+                if (result.getString("fldPassword").equals(password)) {
+                    //returns true when the Credentials match the Database
+                    Var.Session.username = username;
+                    ResultSet rs = d.read("FK_fldDepartment, fldEmployeeID", "tblEmployee", " WHERE fldUsername ='" + username + "'");
+                    rs.next();
+                    departmentID = rs.getInt("FK_fldDepartment");
+
+                    Var.Session.userID = rs.getInt("fldEmployeeID");
+
+                    return true;
+                }
+
+
+            }
+
+            return false;
+
+
+
     }
+
+
+
+
+
+
     public boolean checkDatabaseConnection() throws ClassNotFoundException, SQLException {
         DatabaseConnection dbc = new DatabaseConnection(Var.Database.IPADDRESS, String.valueOf(Var.Database.PORT), Var.Database.DATABASE, Var.Database.USERNAME, Var.Database.PASSWORD);
         try {
