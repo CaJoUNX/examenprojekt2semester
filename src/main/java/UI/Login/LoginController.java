@@ -119,7 +119,7 @@ public class LoginController {
 //
 //        }
 //        return false;
-        departmentID = 1;
+        departmentID = 0;
         return true;
     }
     public boolean checkDatabaseConnection() throws ClassNotFoundException, SQLException {
